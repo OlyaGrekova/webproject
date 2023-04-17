@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_login import login_required
 
 from app.data import db_session
 
@@ -7,9 +8,32 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
 @app.route('/')
-@app.route('/main')
-def main():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     return "test"
+
+
+@app.route('/main')
+@login_required
+def main():
+    pass
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    pass
+
+
+@app.route('/birthday/<int:id>', methods=['GET', 'POST'])
+@login_required
+def birthday(id):
+    pass
+
+
+@app.route('/birthday/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def birthday_edit(id):
+    pass
 
 
 if __name__ == '__main__':
