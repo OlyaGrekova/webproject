@@ -53,5 +53,5 @@ def add():
 
 
 if __name__ == '__main__':
-    db_session.global_init("db/base.db")
+    db_session.global_init("app/db/base.db")
     app.run(port=8081, host='127.0.0.1')
