@@ -1,0 +1,44 @@
+form {
+   display: block;
+   margin-left: 400px;
+   margin-right: 400px;
+   border: 2px solid #447e44;
+   border-radius: 10px;
+   background: #8fe590;
+   padding-left: 50px;
+   padding-right: 50px;
+   padding-top: 20px;
+   padding-bottom: 20px;
+}
+
+form2 {
+   display: block;
+   margin-left: 400px;
+   margin-right: 400px;
+   border: 2px solid #9a4c94;
+   border-radius: 10px;
+   background: #da8fe5;
+   padding-left: 50px;
+   padding-right: 50px;
+   padding-top: 20px;
+   padding-bottom: 20px;
+}
+
+div, h2 {
+    font-family: cursive;
+    color: #447e44;
+}
+
+.forms{
+    margin-left: 10px;
+
+.alert {
+  padding: 20px;
+  background-color: #f44336; /* Red */
+  color: white;
+  margin-bottom: 15px;
+}
+
+.post{
+    border: 2px solid black;
+    border-radius: 10px;

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <title>Добавление даты</title>
+        <link rel="stylesheet" href="/static/css/style.css">
+    </head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="forms"><h2>Add a new Birthday date</h2></div>
+        <div class="forms">
+            <font size="4">{{ form.name.label }}</font><br>
+            {{ form.name(class="form-control") }}<br>
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="forms">
+            <font size="4">{{ form.date.label }}</font><br>
+            {{ form.date(class="form-control") }}<br>
+            {% for error in form.date.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="forms">
+            <font size="4">{{ form.presents.label }}</font><br>
+            {{ form.presents(class="form-control") }}<br>
+            {% for error in form.presents.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="forms">
+            <font size="4">{{ form.price.label }}</font><br>
+            {{ form.price(class="form-control") }}<br>
+            {% for error in form.price.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <p class="forms">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <div>{{ message }}</div>
+    </form>
+{% endblock %}
