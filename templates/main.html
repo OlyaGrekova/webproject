@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <title>Все др</title>
+        <link rel="stylesheet" href="/static/css/style.css">
+    </head>
+<body>
+{% extends "base.html" %}
+{% block content %}
+<aside>
+<br><h1>YOUR LIST</h1><form2 action="" method="post">
+<a class="button3" href="/add">Add new</a>
+    <a class="button3">Сhronologically</a>
+    <a class="button3">As added</a>
+<font size="4">{{ filter.filter.label }}</font>
+{{ filter.filter(class="form-control") }}<br>
+            {% for error in filter.filter.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %} </form2>
+</aside>
+<br><table cellspacing="0px">
+      <thead>
+        <tr>
+          <th class="col1"><h3>Name</h3></th>
+          <th class="col1"><h3>Date</h3></th>
+          <th class="col1"><h3>Presents</h3></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for elem in param %}
+        <tr>
+          {% for el in elem %}
+              <td class="col1">{{ el }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+{% endblock %}

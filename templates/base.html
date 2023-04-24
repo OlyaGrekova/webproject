@@ -3,12 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
+<aside>
+<h1>SCHEDULE OF BDAYS</h1>
+<h3>Welcome to the website!</h3>
+<br><a id="register" class="button1" href="/register">
+  <span>Registration</span>
+</a>
+<a id="login" class="button2" href="/login">
+  <span>Entrance</span>
+</a>
+</aside>
 <body>
-<h1>казалось бы причем тут марс</h1>
-<h4>и еще заголовок для вида</h4>
 <main role="main" class="container">
     {% block content %}{% endblock %}
 </main>
 </body>
+    </div>
 </html>
