@@ -1,8 +1,9 @@
 from flask import Flask, redirect, render_template
 from flask_login import login_required, LoginManager, login_user
 
+from app.data.birthdays import Birthday
 from app.data.users import User
-from forms import AddDateForm, RegistrationForm, LoginForm, Filter
+from forms import RegistrationForm, LoginForm, Filter, BirthdayForm
 
 from app.data import db_session
 
@@ -11,6 +12,8 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+id = None
 
 
 @login_manager.user_loader
@@ -35,6 +38,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    global id
     form = RegistrationForm()
     session = db_session.create_session()
     if form.validate_on_submit():
@@ -44,28 +48,40 @@ def register():
             session.add(user)
             session.commit()
             login_user(user)
-            return redirect('/main')
+            id = user.id
+            return redirect(f'/main/{user.id}')
     return render_template('registration.html', title='Sign up', form=form)
 
 
 @app.route('/')
 def func():
-    return render_template('base.html', title='Добро пожаловать')
+    return render_template('base.html', title='Welcome')
 
 
-@app.route('/main')
-def main():
+@app.route('/main/<int:id>')
+@login_required
+def main(id):
+    db_sess = db_session.create_session()
+    # param = db_sess.query(Birthday).all()
     param = [["Nastya", "02.03", "anime figure"], ["Julia", "13.07", "candle"], ["Olya", "16.09", "plane ticket"]]
     filter = Filter()
-    return render_template('main.html', title='Главная страница', param=param, filter=filter)
+    return render_template('main.html', title='Home', param=param, filter=filter)
 
 
-@app.route('/add', methods=['GET', 'POST'])
-def add():
-    form = AddDateForm()
+@app.route('/add/<int:id>', methods=['GET', 'POST'])
+@login_required
+def add(id):
+    form = BirthdayForm()
+    session = db_session.create_session()
     if form.validate_on_submit():
+        print(load_user(id).birthdays)
+        load_user(id).birthdays = ', '.join(load_user(id).birthdays.split().append(str(len(session.query(Birthday).all()) + 1)))
+        session.commit()
+        bd = Birthday(name=form.name.data, date=form.date.data, gifts=form.presents.data)
+        session.add(bd)
+        session.commit()
         return redirect('/main')
-    return render_template('add_date.html', title='Добавление даты', form=form)
+    return render_template('add_date.html', title='Adding birthday', form=form)
 
 
 @app.route('/birthday/<int:id>', methods=['GET', 'POST'])

@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired
 from wtforms import SelectMultipleField, DateTimeField, SelectField, IntegerField, EmailField
 
 
-class AddDateForm(FlaskForm):
+class BirthdayForm(FlaskForm):
     name = StringField('Name:', validators=[DataRequired()])
     date = DateTimeField('Date of birth:', format='%d.%m.%Y')
     presents = StringField('Presents:', validators=[DataRequired()])
