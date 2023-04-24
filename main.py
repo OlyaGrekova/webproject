@@ -1,6 +1,6 @@
 from flask import Flask, redirect, render_template
 from flask_login import login_required
-from forms import AddDateForm, RegistrationForm, LoginForm
+from forms import AddDateForm, RegistrationForm, LoginForm, Filter
 
 from app.data import db_session
 
@@ -9,6 +9,10 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
 @app.route('/')
+def func():
+    return render_template('base.html', title='Добро пожаловать')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -18,17 +22,27 @@ def login():
 
 
 @app.route('/main')
-@login_required
 def main():
-    return "test"
+    param = [["Nastya", "02.03", "anime figure"], ["Julia", "13.07", "candle"], ["Olya", "16.09", "plane ticket"]]
+    filter = Filter()
+    return render_template('main.html', title='Главная страница', param=param, filter=filter)
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        return redirect('/success')
+        return redirect('/main')
     return render_template('registration.html', title='Регистрация', form=form)
+
+
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    form = AddDateForm()
+    if form.validate_on_submit():
+        return redirect('/main')
+    return render_template('add_date.html', title='Добавление даты', form=form)
+
 
 
 @app.route('/birthday/<int:id>', methods=['GET', 'POST'])
@@ -41,15 +55,6 @@ def birthday(id):
 @login_required
 def birthday_edit(id):
     pass
-
-
-@app.route('/add', methods=['GET', 'POST'])
-@login_required
-def add():
-    form = AddDateForm()
-    if form.validate_on_submit():
-        return redirect('/success')
-    return render_template('add_date.html', title='Добавление даты', form=form)
 
 
 if __name__ == '__main__':
