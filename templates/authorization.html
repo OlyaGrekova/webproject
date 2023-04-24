@@ -29,7 +29,7 @@
                 </div>
             {% endfor %}
         </div>
-        <br><br><div class="forms"><a class="button3" href="/main">Enter</a></div><br>
+        <div class="forms"><p>{{ form.submit(type="submit", class="btn btn-primary") }}</p></div>
         <div>{{ message }}</div>
     </form>
 {% endblock %}
