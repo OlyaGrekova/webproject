@@ -4,7 +4,7 @@ import datetime as dt
 
 from app.data.birthdays import Birthday
 from app.data.users import User
-from forms import RegistrationForm, LoginForm, Filter, BirthdayForm
+from forms import RegistrationForm, LoginForm, Filter, BirthdayForm, Main1, Main2, Main3, Watch, ChangeSave, ChangeDel
 
 from app.data import db_session
 
@@ -74,17 +74,16 @@ def main(id):
     # param = db_sess.query(Birthday).all()
     param = [["Nastya", "02.03", "anime figure"], ["Julia", "13.07", "candle"], ["Olya", "16.09", "plane ticket"]]
     filter = Filter()
-    return render_template('main.html', title='Home', param=param, filter=filter)
-
-
-@app.route('/watch')
-def watch():
-    return render_template('watch.html', name=name, date=date, left=left, spisok=spisok)
-
-
-@app.route('/change')
-def change():
-    return render_template('change.html', name=name, date=date, left=left, spisok=spisok)
+    form1 = Main1()
+    form2 = Main2()
+    form3 = Main3()
+    if form1.validate_on_submit():
+        return redirect("/main")
+    if form2.validate_on_submit():
+        return redirect("/main")
+    if form3.validate_on_submit():
+        return redirect("/main")
+    return render_template('main.html', title='Home', param=param, filter=filter, form1=form1, form2=form2, form3=form3)
 
 
 @app.route('/add/<int:id>', methods=['GET', 'POST'])
@@ -103,16 +102,23 @@ def add(id):
     return render_template('add_date.html', title='Adding birthday', form=form)
 
 
-@app.route('/birthday/<int:id>', methods=['GET', 'POST'])
-@login_required
-def birthday(id):
-    pass
+@app.route('/watch', methods=['GET', 'POST'])
+def birthday():
+    form = Watch()
+    if form.validate_on_submit():
+        return redirect("/main")
+    return render_template('watch.html', form=form, name=name, date=date, left=left, spisok=spisok)
 
 
-@app.route('/birthday/edit/<int:id>', methods=['GET', 'POST'])
-@login_required
-def birthday_edit(id):
-    pass
+@app.route('/change', methods=['GET', 'POST'])
+def birthday_edit():
+    form1 = ChangeSave()
+    form2 = ChangeDel()
+    if form1.validate_on_submit():
+        return redirect("/main")
+    if form2.validate_on_submit():
+        return redirect("/main")
+    return render_template('change.html', form1=form1, form2=form2, name=name, date=date, left=left, spisok=spisok)
 
 
 if __name__ == '__main__':

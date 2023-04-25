@@ -31,3 +31,29 @@ class Filter(FlaskForm):
     filter = SelectField('Show:', choices=["all", "next week", "next month", "January", "February", "March",
                                            "April", "May", "June", "July", "August", "September", "October",
                                            "November", "December"], validators=[DataRequired()])
+
+
+class ChangeSave(FlaskForm):
+    new = StringField('Add present:', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+
+class ChangeDel(FlaskForm):
+    submit = SubmitField('Delete')
+
+
+class Watch(FlaskForm):
+    #для перехода на change из watch
+    submit = SubmitField('Change')
+
+
+class Main1(FlaskForm):
+    submit = SubmitField('Add new')
+
+
+class Main2(FlaskForm):
+    submit = SubmitField('Сhronologically')
+
+
+class Main3(FlaskForm):
+    submit = SubmitField('As added')

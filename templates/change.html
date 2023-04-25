@@ -6,16 +6,26 @@
         <title>Просмотр</title>
     </head>
     <body>
-        <h2>Просмотр даты</h2>
-        <h4>Дата: {{ date }}</h4>
-        <h4>Имя: {{ name }}</h4>
-        <h4>Осталось дней: {{ left }}</h4>
-        <h4>Возможные подарки:</h4>
+    <aside>
+        <h1>CHANGE DATA</h1></aside>
+        <form3 action="" method="post"><aside>
+        <h2>Date: {{ date }} | Name: {{ name }} | Days left: {{ left }}</h2></aside>
+        <h4>Gifts offered:</h4>
         <ul>
             {% for user in spisok %}
-            <h4><input type="checkbox" name="{{ user }}" id="{{ user }}">{{ user }}</h4>
+            <p><input type="checkbox" name="{{ user }}" id="{{ user }}">{{ user }}</p>
             {% endfor %}
         </ul>
-    <a href="/change"><button>Сохранить</button></a>
+        <div class="forms">
+            <font size="4">{{ form1.new.label }}</font><br>
+            {{ form1.new(class="form-control") }}<br>
+            {% for error in form1.new.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+    <div class="forms"><p>{{ form1.submit(type="submit", class="btn btn-primary") }}</p></div>
+    <div class="forms"><p>{{ form2.submit(type="submit", class="btn btn-primary") }}</p></div></form3>
     </body>
 </html>

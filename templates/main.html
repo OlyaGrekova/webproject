@@ -10,9 +10,9 @@
 {% block content %}
 <aside>
 <br><h1>YOUR LIST</h1><form2 action="" method="post">
-<a class="button3" href="/add">Add new</a>
-    <a class="button3">Сhronologically</a>
-    <a class="button3">As added</a>
+    <div class="forms"><p>{{ form1.submit(type="submit", class="btn btn-primary") }}</p></div>
+    <div class="forms"><p>{{ form2.submit(type="submit", class="btn btn-primary") }}</p></div>
+    <div class="forms"><p>{{ form3.submit(type="submit", class="btn btn-primary") }}</p></div>
 <font size="4">{{ filter.filter.label }}</font>
 {{ filter.filter(class="form-control") }}<br>
             {% for error in filter.filter.errors %}

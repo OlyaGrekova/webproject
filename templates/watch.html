@@ -6,16 +6,19 @@
         <title>Просмотр</title>
     </head>
     <body>
-        <h2>Просмотр даты</h2>
-        <h4>Дата: {{ date }}</h4>
-        <h4>Имя: {{ name }}</h4>
-        <h4>Осталось дней: {{ left }}</h4>
-        <h4>Возможные подарки:</h4>
+    <aside>
+        <h1>VIEWING THE DATE</h1></aside>
+        <form3 action="" method="post"><aside>
+        <h2>Date: {{ date }} | Name: {{ name }} | Days left: {{ left }}</h2></aside>
+        <h4>Gifts offered:</h4>
         <ul>
             {% for user in spisok %}
-                <li><h4>{{ user }}</h4></li>
+                <li><p>{{ user }}</p></li>
             {% endfor %}
         </ul>
-    <a href="/change" name=name date=date left=left spisok=spisok><button>Изменить</button></a>
+    <a href="/change" name=name date=date left=left spisok=spisok>
+        <div class="forms"><p>{{ form.submit(type="submit", class="btn btn-primary") }}</p></div>
+    </a>
+    </form3>
     </body>
 </html>
