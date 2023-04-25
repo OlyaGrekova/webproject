@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <link rel="stylesheet" type="text/css" href="/static/css/style.css"/>
+        <title>Просмотр</title>
+    </head>
+    <body>
+        <h2>Просмотр даты</h2>
+        <h4>Дата: {{ date }}</h4>
+        <h4>Имя: {{ name }}</h4>
+        <h4>Осталось дней: {{ left }}</h4>
+        <h4>Возможные подарки:</h4>
+        <ul>
+            {% for user in spisok %}
+                <li><h4>{{ user }}</h4></li>
+            {% endfor %}
+        </ul>
+    <a href="/change" name=name date=date left=left spisok=spisok><button>Изменить</button></a>
+    </body>
+</html>

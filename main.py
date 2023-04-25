@@ -1,5 +1,6 @@
 from flask import Flask, redirect, render_template
 from flask_login import login_required, LoginManager, login_user
+import datetime as dt
 
 from app.data.birthdays import Birthday
 from app.data.users import User
@@ -14,6 +15,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 id = None
+
+name = 'Юля'
+date = '.'.join('13.07.2007'.split('.')[:-1]) + '.' + str((dt.datetime.now().date())).split('-')[0]
+now = str((dt.datetime.now().date())).split('-')
+left = str(dt.date(int(date.split('.')[2]), int(date.split('.')[1]), int(date.split('.')[0])) - dt.date(int(now[0]), int(now[1]), int(now[2])))
+left = left.split(',')[0]
+print(left)
+spisok = ['книга', 'свечи', 'цветы', 'лампа']
 
 
 @login_manager.user_loader
@@ -66,6 +75,16 @@ def main(id):
     param = [["Nastya", "02.03", "anime figure"], ["Julia", "13.07", "candle"], ["Olya", "16.09", "plane ticket"]]
     filter = Filter()
     return render_template('main.html', title='Home', param=param, filter=filter)
+
+
+@app.route('/watch')
+def watch():
+    return render_template('watch.html', name=name, date=date, left=left, spisok=spisok)
+
+
+@app.route('/change')
+def change():
+    return render_template('change.html', name=name, date=date, left=left, spisok=spisok)
 
 
 @app.route('/add/<int:id>', methods=['GET', 'POST'])
