@@ -10,9 +10,9 @@
 {% block content %}
 <aside>
 <br><h1>YOUR LIST</h1><form2 action="" method="post">
-    <div class="forms"><p>{{ form1.submit(type="submit", class="btn btn-primary") }}</p></div>
-    <div class="forms"><p>{{ form2.submit(type="submit", class="btn btn-primary") }}</p></div>
-    <div class="forms"><p>{{ form3.submit(type="submit", class="btn btn-primary") }}</p></div>
+    <a class="button3" href="/add"><span>Add new</span></a>
+    <a class="button3"><span>Сhronologically</span></a>
+    <a class="button3"><span>As added</span></a>
 <font size="4">{{ filter.filter.label }}</font>
 {{ filter.filter(class="form-control") }}<br>
             {% for error in filter.filter.errors %}
@@ -27,6 +27,7 @@
           <th class="col1"><h3>Name</h3></th>
           <th class="col1"><h3>Date</h3></th>
           <th class="col1"><h3>Presents</h3></th>
+          <th class="col1"><h3>Watch</h3></th>
         </tr>
       </thead>
       <tbody>
@@ -35,6 +36,7 @@
           {% for el in elem %}
               <td class="col1">{{ el }}</td>
           {% endfor %}
+          <td class="col1"><a class="button3" href="/watch"><span>Watch</span></a></td>
         </tr>
       {% endfor %}
       </tbody>

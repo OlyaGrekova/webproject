@@ -16,16 +16,7 @@
             <p><input type="checkbox" name="{{ user }}" id="{{ user }}">{{ user }}</p>
             {% endfor %}
         </ul>
-        <div class="forms">
-            <font size="4">{{ form1.new.label }}</font><br>
-            {{ form1.new(class="form-control") }}<br>
-            {% for error in form1.new.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </div>
-    <div class="forms"><p>{{ form1.submit(type="submit", class="btn btn-primary") }}</p></div>
-    <div class="forms"><p>{{ form2.submit(type="submit", class="btn btn-primary") }}</p></div></form3>
+    <a class="button3" href="/watch"><span>Save</span></a>
+    <a class="button3" href="/watch"><span>Delete</span></a></form3>
     </body>
 </html>

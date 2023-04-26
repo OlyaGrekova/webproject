@@ -45,6 +45,20 @@ table {
     height: 50px;
 }
 
+input[type="submit"] {
+    border: none;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    padding: .8em 1em calc(.8em + 3px);
+    border-radius: 3px;
+    margin-right: 10px;
+    background: #DA70D6;
+    box-shadow: 0 -3px #9a4c94 inset;
+    transition: 0.2s;}
+
+input[type="submit"]:hover { background: #9a4c94; }
+
 a.button1 {
     font-weight: 700;
     text-align: center;
@@ -84,21 +98,6 @@ a.button3 {
     transition: 0.2s;
 }
 a.button3:hover { background: #9a4c94; }
-
-input[type="submit"] {
-    border: none;
-    font-weight: 700;
-    color: white;
-    text-decoration: none;
-    padding: .8em 1em calc(.8em + 3px);
-    border-radius: 3px;
-    margin-right: 10px;
-    background: #DA70D6;
-    box-shadow: 0 -3px #9a4c94 inset;
-    transition: 0.2s;
-}
-
-input[type="submit"]:hover { background: #9a4c94; }
 
 form {
    display: block;
