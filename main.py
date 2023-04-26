@@ -47,7 +47,6 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 #РАБОТАЕТ С СУБМИТ
 def register():
-    global id
     form = RegistrationForm()
     session = db_session.create_session()
     if form.validate_on_submit():
@@ -57,7 +56,6 @@ def register():
             session.add(user)
             session.commit()
             login_user(user)
-            id = user.id
             return redirect(f'/main/{user.id}')
     return render_template('registration.html', title='Sign up', form=form)
 
@@ -71,10 +69,12 @@ def func():
 @login_required
 def main(id):
     db_sess = db_session.create_session()
-    param = db_sess.query(Birthday).all()
-    param = [["Nastya", "02.03", "anime figure"], ["Julia", "13.07", "candle"], ["Olya", "16.09", "plane ticket"]]
+    param = []
+    for bd in db_sess.query(Birthday).filter(Birthday.user_id == id).all():
+        param.append([bd.name, bd.date, bd.gifts])
     filter = Filter()
-    return render_template('main.html', title='Home', param=param, filter=filter)
+    return render_template('main.html', title='Home', param=param, filter=filter, add_link=f'/add/{id}',
+                           birthday_link=f'/birthday/{id}')
 
 
 @app.route('/add/<int:id>', methods=['GET', 'POST'])
@@ -84,22 +84,25 @@ def add(id):
     form = BirthdayForm()
     session = db_session.create_session()
     if form.validate_on_submit():
-        print(load_user(id).birthdays)
-        load_user(id).birthdays = ', '.join(load_user(id).birthdays.split().append(str(len(session.query(Birthday).all()) + 1)))
-        session.commit()
-        bd = Birthday(name=form.name.data, date=form.date.data, gifts=form.presents.data)
+        bd = Birthday(name=form.name.data, date=form.date.data, gifts=form.presents.data, user_id=id)
         session.add(bd)
         session.commit()
-        return redirect('/main')
-    return render_template('add_date.html', title='Adding birthday', form=form)
+        user = session.query(User).filter(User.id == id).first()
+        bds = []
+        for bd in session.query(Birthday).filter(Birthday.user_id == id).all():
+            bds.append(str(bd.id))
+        user.birthdays = ', '.join(bds)
+        session.commit()
+        return redirect(f'/main/{id}')
+    return render_template('add_date.html', title='Adding birthday', form=form, id=id)
 
 
-@app.route('/watch', methods=['GET', 'POST'])
+@app.route('/birthday/<int:id>', methods=['GET', 'POST'])
 def birthday():
     return render_template('watch.html', name=name, date=date, left=left, spisok=spisok)
 
 
-@app.route('/change', methods=['GET', 'POST'])
+@app.route('/birthday/edit/<int:id>', methods=['GET', 'POST'])
 def birthday_edit():
     return render_template('change.html', name=name, date=date, left=left, spisok=spisok)
 

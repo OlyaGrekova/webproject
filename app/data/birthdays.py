@@ -12,6 +12,7 @@ class Birthday(SqlAlchemyBase):
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     date = sqlalchemy.Column(sqlalchemy.DateTime, nullable=True)
     gifts = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    user_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
 
     def __repr__(self):
         return f'<Bday> {self.id} {self.name}'

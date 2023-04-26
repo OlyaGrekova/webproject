@@ -10,7 +10,7 @@
 {% block content %}
 <aside>
 <br><h1>YOUR LIST</h1><form2 action="" method="post">
-    <a class="button3" href="/add"><span>Add new</span></a>
+    <a class="button3" href={{add_link}}><span>Add new</span></a>
     <a class="button3"><span>Сhronologically</span></a>
     <a class="button3"><span>As added</span></a>
 <font size="4">{{ filter.filter.label }}</font>
@@ -36,7 +36,7 @@
           {% for el in elem %}
               <td class="col1">{{ el }}</td>
           {% endfor %}
-          <td class="col1"><a class="button3" href="/watch"><span>View data</span></a></td>
+          <td class="col1"><a class="button3" href={{birthday_link}}><span>View data</span></a></td>
         </tr>
       {% endfor %}
       </tbody>
