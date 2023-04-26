@@ -15,7 +15,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 id = None
-
 name = 'Юля'
 date = '.'.join('13.07.2007'.split('.')[:-1]) + '.' + str((dt.datetime.now().date())).split('-')[0]
 now = str((dt.datetime.now().date())).split('-')
