@@ -13,6 +13,7 @@
     <a class="button3" href={{add_link}}><span>Add new</span></a>
     <a class="button3"><span>Сhronologically</span></a>
     <a class="button3"><span>As added</span></a>
+    <a class="button3"><span>Show</span></a>
 <font size="4">{{ filter.filter.label }}</font>
 {{ filter.filter(class="form-control") }}<br>
             {% for error in filter.filter.errors %}
@@ -27,7 +28,7 @@
           <th class="col1"><h3>Name</h3></th>
           <th class="col1"><h3>Date</h3></th>
           <th class="col1"><h3>Presents</h3></th>
-          <th class="col1"><h3>View data</h3></th>
+          <th class="col1"><h3>Edit data</h3></th>
         </tr>
       </thead>
       <tbody>
@@ -37,7 +38,8 @@
               <td class="col1">{{ el }}</td>
           {% endfor %}
           {% set link = birthday_link + ids[i] %}
-          <td class="col1"><a class="button3" href={{link}}><span>View data</span></a></td>
+          <td class="col1"><a class="button1" href={{birthday_link}}><span>View</span></a>
+          <a class="button2" href={{birthday_link}}><span>Delete</span></a></td>
         </tr>
       {% endfor %}
       </tbody>

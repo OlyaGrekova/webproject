@@ -28,6 +28,6 @@ class LoginForm(FlaskForm):
 
 
 class Filter(FlaskForm):
-    filter = SelectField('Show:', choices=["all", "next week", "next month", "January", "February", "March",
+    filter = SelectField('', choices=["all", "next week", "next month", "January", "February", "March",
                                            "April", "May", "June", "July", "August", "September", "October",
                                            "November", "December"], validators=[DataRequired()])
