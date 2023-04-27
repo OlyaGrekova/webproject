@@ -39,7 +39,7 @@ def login():
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            return redirect("/main")
+            return redirect(f"/main/{user.id}")
         return render_template('authorization.html', message="Wrong data", form=form)
     return render_template('authorization.html', title='Login', form=form)
 
@@ -70,11 +70,13 @@ def func():
 def main(id):
     db_sess = db_session.create_session()
     param = []
+    ids = []
     for bd in db_sess.query(Birthday).filter(Birthday.user_id == id).all():
         param.append([bd.name, bd.date, bd.gifts])
+        ids.append(str(bd.id))
     filter = Filter()
     return render_template('main.html', title='Home', param=param, filter=filter, add_link=f'/add/{id}',
-                           birthday_link=f'/birthday/{id}')
+                           birthday_link=f'/birthday/', ids=ids, length=len(param))
 
 
 @app.route('/add/<int:id>', methods=['GET', 'POST'])
@@ -98,13 +100,19 @@ def add(id):
 
 
 @app.route('/birthday/<int:id>', methods=['GET', 'POST'])
-def birthday():
-    return render_template('watch.html', name=name, date=date, left=left, spisok=spisok)
+def birthday(id):
+    session = db_session.create_session()
+    bd = session.query(Birthday).filter(Birthday.id == id).first()
+    spisok = bd.gifts.split(', ')
+    return render_template('watch.html', name=name, date=date, left=left, spisok=spisok, link=f'/birthday/edit/{id}')
 
 
 @app.route('/birthday/edit/<int:id>', methods=['GET', 'POST'])
-def birthday_edit():
-    return render_template('change.html', name=name, date=date, left=left, spisok=spisok)
+def birthday_edit(id):
+    session = db_session.create_session()
+    bd = session.query(Birthday).filter(Birthday.id == id).first()
+    spisok = bd.gifts.split(', ')
+    return render_template('change.html', name=name, date=date, left=left, spisok=spisok, link=f'/birthday/{id}')
 
 
 if __name__ == '__main__':
