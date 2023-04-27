@@ -38,8 +38,8 @@
               <td class="col1">{{ el }}</td>
           {% endfor %}
           {% set link = birthday_link + ids[i] %}
-          <td class="col1"><a class="button1" href={{birthday_link}}><span>View</span></a>
-          <a class="button2" href={{birthday_link}}><span>Delete</span></a></td>
+          <td class="col1"><a class="button1" href={{link}}><span>View</span></a>
+          <a class="button2" href={{link}}><span>Delete</span></a></td>
         </tr>
       {% endfor %}
       </tbody>
