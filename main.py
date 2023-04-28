@@ -105,28 +105,40 @@ def main(id):
         param.append([bd.name, bd.date, bd.gifts])
         ids.append(str(bd.id))
     filter_form = Filter()
-    param = apply_filters(filter_form, param)
+    # param = apply_filters(filter_form, param)
     return render_template('main.html', title='Home', param=param, add_link=f'/add/{id}',
                            birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id),
                            filter='all', filter_form=filter_form)
 
 
-def main_sort(params):
+@app.route('/main_sort/<int:id>', methods=['GET', 'POST'])
+@login_required
+def main_sort(id):
+    db_sess = db_session.create_session()
+    param = []
+    ids = []
+    for bd in db_sess.query(Birthday).filter(Birthday.user_id == id).all():
+        param.append([bd.name, bd.date, bd.gifts])
+        ids.append(str(bd.id))
     slovar = {}
     itog = []
-    for i in params:
+    for i in param:
         i.append(".".join(i[1].split(' ')[0].split('-')[1:]))
         i[1] = i[1].split(' ')[0]
-    for i in params:
+    for i in param:
         if i[3] not in list(slovar.keys()):
             slovar[i[3]] = []
         slovar[i[3]].append(i[:-1])
     key = list(slovar.keys())
     key.sort()
+    filter_form = Filter()
     for i in key:
         for j in slovar[i]:
             itog.append(j)
-    return itog
+    return render_template('main.html', title='Home', param=itog, add_link=f'/add/{id}',
+                           birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id),
+                           filter='all', filter_form=filter_form)
+
 
 @app.route('/main/<int:id>/<int:bd_id>', methods=['GET', 'POST'])
 @login_required
@@ -135,15 +147,6 @@ def main_delete(id, bd_id):
     bd = db_sess.query(Birthday).filter(Birthday.id == bd_id).first()
     db_sess.delete(bd)
     db_sess.commit()
-    return redirect(f'/main/{id}')
-
-
-@app.route('/sort_bd/<int:id>/<int:key>', methods=['GET', 'POST'])
-@login_required
-def sort_bd(id, key):
-    print('yup')
-    global key_state
-    key_state = key
     return redirect(f'/main/{id}')
 
 
