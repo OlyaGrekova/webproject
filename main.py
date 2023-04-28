@@ -1,6 +1,7 @@
 from flask import Flask, redirect, render_template
 from flask_login import login_required, LoginManager, login_user
 import datetime as dt
+from requests import request
 
 from app.data.birthdays import Birthday
 from app.data.users import User
@@ -14,6 +15,9 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+month = {"January": '01', "February": '02', "March": '03', "April": '04', "May": '05', "June": '06', "July": '07',
+         "August": '08', "September": '09', "October": '10', "November": '11', "December": '12'}
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -22,7 +26,7 @@ def load_user(user_id):
 
 
 @app.route('/login', methods=['GET', 'POST'])
-#РАБОТАЕТ С СУБМИТ
+# РАБОТАЕТ С СУБМИТ
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -36,7 +40,7 @@ def login():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-#РАБОТАЕТ С СУБМИТ
+# РАБОТАЕТ С СУБМИТ
 def register():
     form = RegistrationForm()
     session = db_session.create_session()
@@ -65,9 +69,38 @@ def main(id):
     for bd in db_sess.query(Birthday).filter(Birthday.user_id == id).all():
         param.append([bd.name, bd.date, bd.gifts])
         ids.append(str(bd.id))
-    filter = Filter()
-    return render_template('main.html', title='Home', param=param, filter=filter, add_link=f'/add/{id}',
+    filter_form = Filter()
+    param1 = []
+    if filter_form.validate_on_submit():
+        choice = request.filter_form['filter']
+        print(choice)
+        if choice == 'all':
+            param1 = param
+        elif choice == 'next week':
+            for i in param:
+                date = '.'.join(i[1].split('.')[:-1]) + '.' + str((dt.datetime.now().date())).split('-')[0]
+                now = str((dt.datetime.now().date())).split('-')
+                left = str(dt.date(int(date.split('.')[2]), int(date.split('.')[1]), int(date.split('.')[0])) - dt.date(
+                    int(now[0]), int(now[1]), int(now[2]))).split(',')[0]
+                if left <= 7:
+                    param1.append(i)
+        elif choice == 'next month':
+            for i in param:
+                date = '.'.join(i[1].split('.')[:-1]) + '.' + str((dt.datetime.now().date())).split('-')[0]
+                now = str((dt.datetime.now().date())).split('-')
+                left = str(dt.date(int(date.split('.')[2]), int(date.split('.')[1]), int(date.split('.')[0])) - dt.date(
+                    int(now[0]), int(now[1]), int(now[2]))).split(',')[0]
+                if left <= 30:
+                    param1.append(i)
+        else:
+            for i in param:
+                m = i[1].split('.')[1]
+                if m == month[choice]:
+                    param1.append(i)
+    return render_template('main.html', title='Home', param=param1, filter=filter_form, add_link=f'/add/{id}',
                            birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id))
+    # return render_template('main.html', title='Home', param=param, filter=filter, add_link=f'/add/{id}',
+    #                        birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id))
 
 
 @app.route('/main/<int:id>/<int:bd_id>', methods=['GET', 'POST'])
@@ -82,7 +115,7 @@ def main_delete(id, bd_id):
 
 @app.route('/add/<int:id>', methods=['GET', 'POST'])
 @login_required
-#РАБОТАЕТ С СУБМИТ
+# РАБОТАЕТ С СУБМИТ
 def add(id):
     form = BirthdayForm()
     session = db_session.create_session()
@@ -106,7 +139,7 @@ def birthday(id):
     bd = session.query(Birthday).filter(Birthday.id == id).first()
     spisok = bd.gifts.split(', ')
     date = dt.date(dt.datetime.today().year, int(str(bd.date).split()[0].split('-')[1]),
-                       int(str(bd.date).split()[0].split('-')[2]))
+                   int(str(bd.date).split()[0].split('-')[2]))
     now = dt.date.today()
     left = (date - now).days
     if left < 0:
