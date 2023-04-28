@@ -111,6 +111,23 @@ def main(id):
                            filter='all', filter_form=filter_form)
 
 
+def main_sort(params):
+    slovar = {}
+    itog = []
+    for i in params:
+        i.append(".".join(i[1].split(' ')[0].split('-')[1:]))
+        i[1] = i[1].split(' ')[0]
+    for i in params:
+        if i[3] not in list(slovar.keys()):
+            slovar[i[3]] = []
+        slovar[i[3]].append(i[:-1])
+    key = list(slovar.keys())
+    key.sort()
+    for i in key:
+        for j in slovar[i]:
+            itog.append(j)
+    return itog
+
 @app.route('/main/<int:id>/<int:bd_id>', methods=['GET', 'POST'])
 @login_required
 def main_delete(id, bd_id):
