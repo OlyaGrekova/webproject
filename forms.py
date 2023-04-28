@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, Form
 from wtforms.validators import DataRequired
 from wtforms import SelectMultipleField, DateTimeField, SelectField, IntegerField, EmailField
 
@@ -27,7 +27,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Enter')
 
 
-class Filter(FlaskForm):
+class Filter(Form):
     filter = SelectField('', choices=["all", "next week", "next month", "January", "February", "March",
                                            "April", "May", "June", "July", "August", "September", "October",
-                                           "November", "December"], validators=[DataRequired()])
+                                           "November", "December"], validators=[DataRequired()], validate_choice=True)

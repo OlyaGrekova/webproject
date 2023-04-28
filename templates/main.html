@@ -11,12 +11,13 @@
 <aside>
 <br><h1>YOUR LIST</h1><form2 action="" method="post">
     <a class="button3" href={{add_link}}><span>Add new</span></a>
-    <a class="button3"><span>Сhronologically</span></a>
-    <a class="button3"><span>As added</span></a>
-    <a class="button3"><span>Show</span></a>
-<font size="4">{{ filter.filter.label }}</font>
-{{ filter.filter(class="form-control") }}<br>
-            {% for error in filter.filter.errors %}
+    <a class="button3" href="/sort_bd/{{id}}/1"><span>Chronologically</span></a>
+    <a class="button3" href="/sort_bd/{{id}}/0"><span>As added</span></a>
+    {% print(filter_form.filter.data) %}
+    <a class="button3" href="/filter_bd/{{id}}/{{filter_form.filter.data}}"><span>Show</span></a>
+<font size="4">{{ filter_form.filter.label }}</font>
+{{ filter_form.filter(class="form-control") }}<br>
+            {% for error in filter_form.filter.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
                 </div>
@@ -37,8 +38,8 @@
           {% for el in param[i] %}
               <td class="col1">{{ el }}</td>
           {% endfor %}
-          {% set link = birthday_link + ids[i] %}
-          {% set link2 = '/main/' + id + '/' + ids[i] %}
+           {% set link = birthday_link + ids[i] %}
+           {% set link2 = '/main/' + id + '/' + ids[i] %}
           <td class="col1"><a class="button1" href={{link}}><span>View</span></a>
           <a class="button2" href={{link2}}><span>Delete</span></a></td>
         </tr>

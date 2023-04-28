@@ -15,6 +15,8 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+filter_state = 'all'
+key_state = 0
 month = {"January": '01', "February": '02', "March": '03', "April": '04', "May": '05', "June": '06', "July": '07',
          "August": '08', "September": '09', "October": '10', "November": '11', "December": '12'}
 
@@ -23,6 +25,39 @@ month = {"January": '01', "February": '02', "March": '03', "April": '04', "May":
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
+
+
+def apply_filters(filter_form, param):
+    param2 = []
+    if not filter_form.filter.data:
+        choice = 'all'
+    else:
+        choice = filter_form.filter.data
+    print(choice)
+    if choice == 'all':
+        param2 = param
+    elif choice == 'next week':
+        for i in param:
+            date = '.'.join(i[1].split('.')[:-1]) + '.' + str((dt.datetime.now().date())).split('-')[0]
+            now = str((dt.datetime.now().date())).split('-')
+            left = str(dt.date(int(date.split('.')[2]), int(date.split('.')[1]), int(date.split('.')[0])) - dt.date(
+                int(now[0]), int(now[1]), int(now[2]))).split(',')[0]
+            if left <= 7:
+                param2.append(i)
+    elif choice == 'next month':
+        for i in param:
+            date = '.'.join(i[1].split('.')[:-1]) + '.' + str((dt.datetime.now().date())).split('-')[0]
+            now = str((dt.datetime.now().date())).split('-')
+            left = str(dt.date(int(date.split('.')[2]), int(date.split('.')[1]), int(date.split('.')[0])) - dt.date(
+                int(now[0]), int(now[1]), int(now[2]))).split(',')[0]
+            if left <= 30:
+                param2.append(i)
+    else:
+        for i in param:
+            m = i[1].split('.')[1]
+            if m == month[choice]:
+                param2.append(i)
+    return param2
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -70,37 +105,10 @@ def main(id):
         param.append([bd.name, bd.date, bd.gifts])
         ids.append(str(bd.id))
     filter_form = Filter()
-    param1 = []
-    if filter_form.validate_on_submit():
-        choice = request.filter_form['filter']
-        print(choice)
-        if choice == 'all':
-            param1 = param
-        elif choice == 'next week':
-            for i in param:
-                date = '.'.join(i[1].split('.')[:-1]) + '.' + str((dt.datetime.now().date())).split('-')[0]
-                now = str((dt.datetime.now().date())).split('-')
-                left = str(dt.date(int(date.split('.')[2]), int(date.split('.')[1]), int(date.split('.')[0])) - dt.date(
-                    int(now[0]), int(now[1]), int(now[2]))).split(',')[0]
-                if left <= 7:
-                    param1.append(i)
-        elif choice == 'next month':
-            for i in param:
-                date = '.'.join(i[1].split('.')[:-1]) + '.' + str((dt.datetime.now().date())).split('-')[0]
-                now = str((dt.datetime.now().date())).split('-')
-                left = str(dt.date(int(date.split('.')[2]), int(date.split('.')[1]), int(date.split('.')[0])) - dt.date(
-                    int(now[0]), int(now[1]), int(now[2]))).split(',')[0]
-                if left <= 30:
-                    param1.append(i)
-        else:
-            for i in param:
-                m = i[1].split('.')[1]
-                if m == month[choice]:
-                    param1.append(i)
-    return render_template('main.html', title='Home', param=param1, filter=filter_form, add_link=f'/add/{id}',
-                           birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id))
-    # return render_template('main.html', title='Home', param=param, filter=filter, add_link=f'/add/{id}',
-    #                        birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id))
+    param = apply_filters(filter_form, param)
+    return render_template('main.html', title='Home', param=param, add_link=f'/add/{id}',
+                           birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id),
+                           filter='all', filter_form=filter_form)
 
 
 @app.route('/main/<int:id>/<int:bd_id>', methods=['GET', 'POST'])
@@ -110,6 +118,25 @@ def main_delete(id, bd_id):
     bd = db_sess.query(Birthday).filter(Birthday.id == bd_id).first()
     db_sess.delete(bd)
     db_sess.commit()
+    return redirect(f'/main/{id}')
+
+
+@app.route('/sort_bd/<int:id>/<int:key>', methods=['GET', 'POST'])
+@login_required
+def sort_bd(id, key):
+    print('yup')
+    global key_state
+    key_state = key
+    return redirect(f'/main/{id}')
+
+
+@app.route('/filter_bd/<int:id>/<choice>', methods=['GET', 'POST'])
+@login_required
+def filter_bd(id, choice):
+    filter_form = Filter()
+    print(choice)
+    global filter_state
+    filter_state = choice
     return redirect(f'/main/{id}')
 
 
