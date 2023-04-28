@@ -123,8 +123,8 @@ def main_sort(id):
     slovar = {}
     itog = []
     for i in param:
-        i.append(".".join(i[1].split(' ')[0].split('-')[1:]))
-        i[1] = i[1].split(' ')[0]
+        i.append(".".join(str(i[1]).split(' ')[0].split('-')[1:]))
+        i[1] = str(i[1]).split(' ')[0]
     for i in param:
         if i[3] not in list(slovar.keys()):
             slovar[i[3]] = []
@@ -135,6 +135,7 @@ def main_sort(id):
     for i in key:
         for j in slovar[i]:
             itog.append(j)
+    print(itog)
     return render_template('main.html', title='Home', param=itog, add_link=f'/add/{id}',
                            birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id),
                            filter='all', filter_form=filter_form)
