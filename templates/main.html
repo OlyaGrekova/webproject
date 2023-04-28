@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-        <title>Все др</title>
+        <title>Home</title>
         <link rel="stylesheet" href="/static/css/style.css">
     </head>
 <body>
@@ -38,8 +38,9 @@
               <td class="col1">{{ el }}</td>
           {% endfor %}
           {% set link = birthday_link + ids[i] %}
+          {% set link2 = '/main/' + id + '/' + ids[i] %}
           <td class="col1"><a class="button1" href={{link}}><span>View</span></a>
-          <a class="button2" href={{link}}><span>Delete</span></a></td>
+          <a class="button2" href={{link2}}><span>Delete</span></a></td>
         </tr>
       {% endfor %}
       </tbody>

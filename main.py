@@ -14,15 +14,6 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-id = None
-name = 'Юля'
-date = '.'.join('13.07.2007'.split('.')[:-1]) + '.' + str((dt.datetime.now().date())).split('-')[0]
-now = str((dt.datetime.now().date())).split('-')
-left = str(dt.date(int(date.split('.')[2]), int(date.split('.')[1]), int(date.split('.')[0])) - dt.date(int(now[0]), int(now[1]), int(now[2])))
-left = left.split(',')[0]
-print(left)
-spisok = ['книга', 'свечи', 'цветы', 'лампа']
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -38,7 +29,7 @@ def login():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
+            login_user(user)
             return redirect(f"/main/{user.id}")
         return render_template('authorization.html', message="Wrong data", form=form)
     return render_template('authorization.html', title='Login', form=form)
@@ -76,7 +67,17 @@ def main(id):
         ids.append(str(bd.id))
     filter = Filter()
     return render_template('main.html', title='Home', param=param, filter=filter, add_link=f'/add/{id}',
-                           birthday_link=f'/birthday/', ids=ids, length=len(param))
+                           birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id))
+
+
+@app.route('/main/<int:id>/<int:bd_id>', methods=['GET', 'POST'])
+@login_required
+def main_delete(id, bd_id):
+    db_sess = db_session.create_session()
+    bd = db_sess.query(Birthday).filter(Birthday.id == bd_id).first()
+    db_sess.delete(bd)
+    db_sess.commit()
+    return redirect(f'/main/{id}')
 
 
 @app.route('/add/<int:id>', methods=['GET', 'POST'])
@@ -104,7 +105,15 @@ def birthday(id):
     session = db_session.create_session()
     bd = session.query(Birthday).filter(Birthday.id == id).first()
     spisok = bd.gifts.split(', ')
-    return render_template('watch.html', name=name, date=date, left=left, spisok=spisok, link=f'/birthday/edit/{id}')
+    date = dt.date(dt.datetime.today().year, int(str(bd.date).split()[0].split('-')[1]),
+                       int(str(bd.date).split()[0].split('-')[2]))
+    now = dt.date.today()
+    left = (date - now).days
+    if left < 0:
+        left = 360 + left
+    user = session.query(User).filter(User.birthdays.like(f'%{id}%')).first()
+    return render_template('watch.html', name=bd.name, date=bd.date, left=left, spisok=spisok,
+                           link=f'/birthday/edit/{id}', link2=f'/main/{user.id}')
 
 
 @app.route('/birthday/edit/<int:id>', methods=['GET', 'POST'])
@@ -112,7 +121,13 @@ def birthday_edit(id):
     session = db_session.create_session()
     bd = session.query(Birthday).filter(Birthday.id == id).first()
     spisok = bd.gifts.split(', ')
-    return render_template('change.html', name=name, date=date, left=left, spisok=spisok, link=f'/birthday/{id}')
+    date = dt.date(dt.datetime.today().year, int(str(bd.date).split()[0].split('-')[1]),
+                   int(str(bd.date).split()[0].split('-')[2]))
+    now = dt.date.today()
+    left = (date - now).days
+    if left < 0:
+        left = 360 + left
+    return render_template('change.html', name=bd.name, date=bd.date, left=left, spisok=spisok, link=f'/birthday/{id}')
 
 
 if __name__ == '__main__':
