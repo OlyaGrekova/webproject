@@ -188,7 +188,20 @@ def birthday_edit(id):
     if left < 0:
         left = 360 + left
     form = ChangeForm()
-    return render_template('change.html', form=form, name=bd.name, date=bd.date, left=left, spisok=spisok, link=f'/birthday/{id}')
+    if form.validate_on_submit():
+        print('yo')
+        if form.name.data:
+            bd.name = form.name.data
+            session.commit()
+        if form.date.data:
+            bd.date = form.date.data
+            session.commit()
+        if form.presents.data:
+            bd.gifts = form.presents.data
+            session.commit()
+        return redirect(f'/birthday/{id}')
+    return render_template('change.html', form=form, name=bd.name, date=bd.date, left=left, spisok=spisok,
+                           link=f'/birthday/{id}')
 
 
 if __name__ == '__main__':

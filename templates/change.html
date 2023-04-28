@@ -8,7 +8,7 @@
     <body>
     <aside>
         <h1>CHANGE DATA</h1></aside>
-        <form3 action="" method="post">
+        <form action="" method="post">
         <h2>Name: {{ name }}</h2>
             <div class="forms">
             {{ form.name(class="form-control") }}<br>
@@ -38,8 +38,9 @@
                 </div>
             {% endfor %}
         </div>
-    <br><br><a class="button1" href={{link}}><span>Save</span></a>
+    <br><br><div class="forms"><p>{{ form.submit(type="submit", class="btn btn-primary") }}</p></div>
+        <div>{{ message }}</div>
     <a class="button2" href={{link}}><span>Delete</span></a>
-        </form3>
+        </form>
     </body>
 </html>
