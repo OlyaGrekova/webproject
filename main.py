@@ -189,7 +189,7 @@ def birthday_edit(id):
         left = 360 + left
     form = ChangeForm()
     if form.validate_on_submit():
-        print('yo')
+        print('save')
         if form.name.data:
             bd.name = form.name.data
             session.commit()
