@@ -8,15 +8,16 @@
 <body>
     <aside>
         <h1>VIEWING THE DATE</h1></aside>
-        <form3 action="" method="post"><aside>
-        <h2>Date: {{ date }} | Name: {{ name }} | Days left: {{ left }}</h2></aside>
-        <h4>Gifts offered:</h4>
+        <form3 action="" method="post">
+        <h2>Name: {{ name }}</h2>
+        <h2>Date: {{ date }} | Days left: {{ left }}</h2>
+        <h2>Gifts offered:</h2>
         <ul>
             {% for user in spisok %}
-                <li><p>{{ user }}</p></li>
+                <h2><li>{{ user }}</li></h2>
             {% endfor %}
         </ul>
-        <a class="button1" href={{link}}><span>Change</span></a>
+        <br><a class="button1" href={{link}}><span>Change</span></a>
         <a class="button2" href={{link2}}><span>Back</span></a>
         </form3>
 </body>

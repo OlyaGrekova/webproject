@@ -8,16 +8,38 @@
     <body>
     <aside>
         <h1>CHANGE DATA</h1></aside>
-        <form3 action="" method="post"><aside>
-        <h2>Date: {{ date }} | Name: {{ name }} | Days left: {{ left }}</h2></aside>
-        <h4>Gifts offered:</h4>
-        <ul>
-            {% for user in spisok %}
-            <p><input type="checkbox" name="{{ user }}" id="{{ user }}">{{ user }}</p>
+        <form3 action="" method="post">
+        <h2>Name: {{ name }}</h2>
+            <div class="forms">
+            {{ form.name(class="form-control") }}<br>
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
             {% endfor %}
-        </ul>
-    <a class="button1" href={{link}}><span>Save</span></a>
+        </div>
+        <h2>Date: {{ date }}</h2>
+            <div class="forms">
+            {{ form.date(class="form-control") }}<br>
+            {% for error in form.date.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+        <h2>Gifts offered: {% for user in spisok %}
+            {{ user }}
+            {% endfor %}</h2>
+        <div class="forms">
+            {{ form.presents(class="form-control") }}<br>
+            {% for error in form.presents.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+    <br><br><a class="button1" href={{link}}><span>Save</span></a>
     <a class="button2" href={{link}}><span>Delete</span></a>
-    </form3>
+        </form3>
     </body>
 </html>

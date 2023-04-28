@@ -5,7 +5,7 @@ from requests import request
 
 from app.data.birthdays import Birthday
 from app.data.users import User
-from forms import RegistrationForm, LoginForm, Filter, BirthdayForm
+from forms import RegistrationForm, LoginForm, Filter, BirthdayForm, ChangeForm
 
 from app.data import db_session
 
@@ -187,7 +187,8 @@ def birthday_edit(id):
     left = (date - now).days
     if left < 0:
         left = 360 + left
-    return render_template('change.html', name=bd.name, date=bd.date, left=left, spisok=spisok, link=f'/birthday/{id}')
+    form = ChangeForm()
+    return render_template('change.html', form=form, name=bd.name, date=bd.date, left=left, spisok=spisok, link=f'/birthday/{id}')
 
 
 if __name__ == '__main__':

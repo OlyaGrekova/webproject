@@ -11,6 +11,12 @@ class BirthdayForm(FlaskForm):
     submit = SubmitField('Save')
 
 
+class ChangeForm(FlaskForm):
+    name = StringField('', validators=[DataRequired()])
+    date = DateTimeField('', format='%d.%m.%Y')
+    presents = StringField('', validators=[DataRequired()])
+
+
 class RegistrationForm(FlaskForm):
     name = StringField('Name:', validators=[DataRequired()])
     surname = StringField('Surname:', validators=[DataRequired()])
