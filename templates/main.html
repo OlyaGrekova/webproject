@@ -13,7 +13,6 @@
     <a class="button3" href={{add_link}}><span>Add new</span></a>
     <a class="button3" href="/main_sort/{{id}}"><span>Chronologically</span></a>
     <a class="button3" href="/main/{{id}}"><span>As added</span></a>
-    {% print(filter_form.filter.data) %}
     <a class="button3" href="/filter_bd/{{id}}/{{filter_form.filter.data}}"><span>Show</span></a>
 <font size="4">{{ filter_form.filter.label }}</font>
 {{ filter_form.filter(class="form-control") }}<br>

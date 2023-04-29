@@ -102,7 +102,7 @@ def main(id):
     param = []
     ids = []
     for bd in db_sess.query(Birthday).filter(Birthday.user_id == id).all():
-        param.append([bd.name, bd.date, bd.gifts])
+        param.append([bd.name, str(bd.date).split()[0], bd.gifts])
         ids.append(str(bd.id))
     filter_form = Filter()
     # param = apply_filters(filter_form, param)
@@ -118,7 +118,7 @@ def main_sort(id):
     param = []
     ids = []
     for bd in db_sess.query(Birthday).filter(Birthday.user_id == id).all():
-        param.append([bd.name, bd.date, bd.gifts])
+        param.append([bd.name, str(bd.date).split()[0], bd.gifts])
         ids.append(str(bd.id))
     slovar = {}
     itog = []
@@ -193,7 +193,7 @@ def birthday(id):
     if left < 0:
         left = 360 + left
     user = session.query(User).filter(User.birthdays.like(f'%{id}%')).first()
-    return render_template('watch.html', name=bd.name, date=bd.date, left=left, spisok=spisok,
+    return render_template('watch.html', name=bd.name, date=str(bd.date).split()[0], left=left, spisok=spisok,
                            link=f'/birthday/edit/{id}', link2=f'/main/{user.id}')
 
 
@@ -215,13 +215,14 @@ def birthday_edit(id):
             bd.name = form.name.data
             session.commit()
         if form.date.data:
-            bd.date = form.date.data
+            data = str(form.date.data).split('.')
+            bd.date = dt.datetime(int(data[2]), int(data[1]), int(data[0]))
             session.commit()
         if form.presents.data:
             bd.gifts = form.presents.data
             session.commit()
         return redirect(f'/birthday/{id}')
-    return render_template('change.html', form=form, name=bd.name, date=bd.date, left=left, spisok=spisok,
+    return render_template('change.html', form=form, name=bd.name, date=str(bd.date).split()[0], left=left, spisok=spisok,
                            link=f'/birthday/{id}')
 
 
