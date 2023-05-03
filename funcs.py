@@ -122,8 +122,8 @@ def main_sort(id):
     slovar = {}
     itog = []
     for i in param:
-        i.append(".".join(i[1].split(' ')[0].split('-')[1:]))
-        i[1] = i[1].split(' ')[0]
+        i.append(".".join(str(i[1]).split(' ')[0].split('-')[1:]))
+        i[1] = str(i[1]).split(' ')[0]
     for i in param:
         if i[3] not in list(slovar.keys()):
             slovar[i[3]] = []
