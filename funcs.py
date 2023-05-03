@@ -20,19 +20,10 @@ blueprint = flask.Blueprint(
 )
 
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-
 filter_state = 'all'
 key_state = 0
 month = {"January": '01', "February": '02', "March": '03', "April": '04', "May": '05', "June": '06', "July": '07',
          "August": '08', "September": '09', "October": '10', "November": '11', "December": '12'}
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
 
 
 def apply_filters(filter_form, param):
