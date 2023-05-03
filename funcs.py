@@ -1,3 +1,4 @@
+import flask
 from flask import Flask, redirect, render_template
 from flask_login import login_required, LoginManager, login_user
 import datetime as dt
@@ -11,6 +12,13 @@ from app.data import db_session
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+
+blueprint = flask.Blueprint(
+    'birthdays',
+    __name__,
+    template_folder='templates'
+)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -60,7 +68,7 @@ def apply_filters(filter_form, param):
     return param2
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@blueprint.route('/login', methods=['GET', 'POST'])
 # РАБОТАЕТ С СУБМИТ
 def login():
     form = LoginForm()
@@ -74,7 +82,7 @@ def login():
     return render_template('authorization.html', title='Login', form=form)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@blueprint.route('/register', methods=['GET', 'POST'])
 # РАБОТАЕТ С СУБМИТ
 def register():
     form = RegistrationForm()
@@ -90,19 +98,19 @@ def register():
     return render_template('registration.html', title='Sign up', form=form)
 
 
-@app.route('/')
+@blueprint.route('/')
 def func():
     return render_template('base.html', title='Welcome')
 
 
-@app.route('/main/<int:id>', methods=['GET', 'POST'])
+@blueprint.route('/main/<int:id>', methods=['GET', 'POST'])
 @login_required
 def main(id):
     db_sess = db_session.create_session()
     param = []
     ids = []
     for bd in db_sess.query(Birthday).filter(Birthday.user_id == id).all():
-        param.append([bd.name, str(bd.date).split()[0], bd.gifts])
+        param.append([bd.name, bd.date, bd.gifts])
         ids.append(str(bd.id))
     filter_form = Filter()
     # param = apply_filters(filter_form, param)
@@ -111,20 +119,20 @@ def main(id):
                            filter='all', filter_form=filter_form)
 
 
-@app.route('/main_sort/<int:id>', methods=['GET', 'POST'])
+@blueprint.route('/main_sort/<int:id>', methods=['GET', 'POST'])
 @login_required
 def main_sort(id):
     db_sess = db_session.create_session()
     param = []
     ids = []
     for bd in db_sess.query(Birthday).filter(Birthday.user_id == id).all():
-        param.append([bd.name, str(bd.date).split()[0], bd.gifts])
+        param.append([bd.name, bd.date, bd.gifts])
         ids.append(str(bd.id))
     slovar = {}
     itog = []
     for i in param:
-        i.append(".".join(str(i[1]).split(' ')[0].split('-')[1:]))
-        i[1] = str(i[1]).split(' ')[0]
+        i.append(".".join(i[1].split(' ')[0].split('-')[1:]))
+        i[1] = i[1].split(' ')[0]
     for i in param:
         if i[3] not in list(slovar.keys()):
             slovar[i[3]] = []
@@ -135,13 +143,12 @@ def main_sort(id):
     for i in key:
         for j in slovar[i]:
             itog.append(j)
-    print(itog)
     return render_template('main.html', title='Home', param=itog, add_link=f'/add/{id}',
                            birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id),
                            filter='all', filter_form=filter_form)
 
 
-@app.route('/main/<int:id>/<int:bd_id>', methods=['GET', 'POST'])
+@blueprint.route('/main/<int:id>/<int:bd_id>', methods=['GET', 'POST'])
 @login_required
 def main_delete(id, bd_id):
     db_sess = db_session.create_session()
@@ -151,7 +158,7 @@ def main_delete(id, bd_id):
     return redirect(f'/main/{id}')
 
 
-@app.route('/filter_bd/<int:id>/<choice>', methods=['GET', 'POST'])
+@blueprint.route('/filter_bd/<int:id>/<choice>', methods=['GET', 'POST'])
 @login_required
 def filter_bd(id, choice):
     filter_form = Filter()
@@ -161,7 +168,7 @@ def filter_bd(id, choice):
     return redirect(f'/main/{id}')
 
 
-@app.route('/add/<int:id>', methods=['GET', 'POST'])
+@blueprint.route('/add/<int:id>', methods=['GET', 'POST'])
 @login_required
 # РАБОТАЕТ С СУБМИТ
 def add(id):
@@ -181,7 +188,7 @@ def add(id):
     return render_template('add_date.html', title='Adding birthday', form=form, id=id)
 
 
-@app.route('/birthday/<int:id>', methods=['GET', 'POST'])
+@blueprint.route('/birthday/<int:id>', methods=['GET', 'POST'])
 def birthday(id):
     session = db_session.create_session()
     bd = session.query(Birthday).filter(Birthday.id == id).first()
@@ -193,11 +200,11 @@ def birthday(id):
     if left < 0:
         left = 360 + left
     user = session.query(User).filter(User.birthdays.like(f'%{id}%')).first()
-    return render_template('watch.html', name=bd.name, date=str(bd.date).split()[0], left=left, spisok=spisok,
+    return render_template('watch.html', name=bd.name, date=bd.date, left=left, spisok=spisok,
                            link=f'/birthday/edit/{id}', link2=f'/main/{user.id}')
 
 
-@app.route('/birthday/edit/<int:id>', methods=['GET', 'POST'])
+@blueprint.route('/birthday/edit/<int:id>', methods=['GET', 'POST'])
 def birthday_edit(id):
     session = db_session.create_session()
     bd = session.query(Birthday).filter(Birthday.id == id).first()
@@ -215,17 +222,11 @@ def birthday_edit(id):
             bd.name = form.name.data
             session.commit()
         if form.date.data:
-            data = str(form.date.data).split('.')
-            bd.date = dt.datetime(int(data[2]), int(data[1]), int(data[0]))
+            bd.date = form.date.data
             session.commit()
         if form.presents.data:
             bd.gifts = form.presents.data
             session.commit()
         return redirect(f'/birthday/{id}')
-    return render_template('change.html', form=form, name=bd.name, date=str(bd.date).split()[0], left=left, spisok=spisok,
+    return render_template('change.html', form=form, name=bd.name, date=bd.date, left=left, spisok=spisok,
                            link=f'/birthday/{id}')
-
-
-if __name__ == '__main__':
-    db_session.global_init("app/db/base.db")
-    app.run(port=8081, host='127.0.0.1')
