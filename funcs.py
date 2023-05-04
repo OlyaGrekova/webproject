@@ -64,6 +64,8 @@ def main(id):
     for bd in db_sess.query(Birthday).filter(Birthday.user_id == id).all():
         param.append([bd.name, bd.date, bd.gifts])
         ids.append(str(bd.id))
+    for i in param:
+        i[1] = str(i[1]).split(' ')[0]
     return render_template('main.html', title='Home', param=param, add_link=f'/add/{id}',
                            birthday_link=f'/birthday/', ids=ids, length=len(param), id=str(id))
 
