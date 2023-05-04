@@ -32,9 +32,3 @@ class LoginForm(FlaskForm):
     email = EmailField('Login or email:', validators=[DataRequired()])
     password = PasswordField('Password:', validators=[DataRequired()])
     submit = SubmitField('Enter')
-
-
-class Filter(Form):
-    filter = SelectField('', choices=["all", "next week", "next month", "January", "February", "March",
-                                           "April", "May", "June", "July", "August", "September", "October",
-                                           "November", "December"], validators=[DataRequired()], validate_choice=True)
